@@ -2,7 +2,7 @@ package models
 
 type EarthquakeResponse struct {
 	Type     string    `json:"type"`
-	Meta     Metadata  `json:"metadata"`
+	Metadata Metadata  `json:"metadata"`
 	Features []Feature `json:"features"`
 }
 
