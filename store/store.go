@@ -1,0 +1,76 @@
+package store
+
+import (
+	"database/sql"
+	"fmt"
+
+	"github.com/deathcore1998/earthquake-cli/models"
+	_ "github.com/mattn/go-sqlite3"
+)
+
+type DB struct {
+	db *sql.DB
+}
+
+func (database *DB) createTable() error {
+	query := `CREATE TABLE IF NOT EXISTS earthquakes (
+		id          TEXT PRIMARY KEY,
+		mag         REAL,
+		place       TEXT,
+		time        INTEGER,
+		tsunami     INTEGER,
+		url         TEXT,
+		status      TEXT,
+		longitude   REAL,
+		latitude    REAL,
+		depth       REAL	
+	)`
+
+	_, err := database.db.Exec(query)
+	return err
+}
+
+func (database *DB) Close() error {
+	return database.db.Close()
+}
+
+func (database *DB) Save(future models.Feature) error {
+	query := `INSERT OR REPLACE INTO earthquakes 
+	(id, mag, place, time, tsunami, url, status, longitude, latitude, depth)
+	VALUES
+	(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+
+	_, err := database.db.Exec(
+		query,
+		future.ID,
+		future.Properties.Mag,
+		future.Properties.Place,
+		future.Properties.Time,
+		future.Properties.Tsunami,
+		future.Properties.URL,
+		future.Properties.Status,
+		future.Geometry.Coordinates[0],
+		future.Geometry.Coordinates[1],
+		future.Geometry.Coordinates[2])
+
+	return err
+}
+
+func NewDB(path string) (*DB, error) {
+	db, err := sql.Open("sqlite3", path)
+	if err != nil {
+		return nil, fmt.Errorf("open db: %w", err)
+	}
+
+	// connection check
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("ping db: %w", err)
+	}
+
+	database := &DB{db: db}
+	if err := database.createTable(); err != nil {
+		return nil, fmt.Errorf("create table: %w", err)
+	}
+
+	return database, nil
+}
