@@ -56,6 +56,49 @@ func (database *DB) Save(future models.Feature) error {
 	return err
 }
 
+func (database *DB) GetAll() ([]models.Feature, error) {
+	query := `
+		SELECT id, mag, place, time, tsunami, url, status, longitude, latitude, depth
+		FROM earthquakes`
+
+	rows, err := database.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("query: %w", err)
+	}
+
+	defer rows.Close()
+	var features []models.Feature
+
+	for rows.Next() {
+		var feature models.Feature
+		feature.Geometry.Coordinates = make([]float64, 3)
+
+		err := rows.Scan(
+			&feature.ID,
+			&feature.Properties.Mag,
+			&feature.Properties.Place,
+			&feature.Properties.Time,
+			&feature.Properties.Tsunami,
+			&feature.Properties.URL,
+			&feature.Properties.Status,
+			&feature.Geometry.Coordinates[0],
+			&feature.Geometry.Coordinates[1],
+			&feature.Geometry.Coordinates[2],
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("scan: %w", err)
+		}
+		features = append(features, feature)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows: %w", err)
+	}
+
+	return features, nil
+}
+
 func NewDB(path string) (*DB, error) {
 	db, err := sql.Open("sqlite3", path)
 	if err != nil {

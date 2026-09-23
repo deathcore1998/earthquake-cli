@@ -24,10 +24,10 @@ func main() {
 
 	fmt.Printf("Total number earthquakes: %d\n", earthquakes.Metadata.Count)
 	for _, value := range earthquakes.Features {
-		fmt.Printf("M%.1f — %s\n", value.Properties.Mag, value.Properties.Place)
 		if err := database.Save(value); err != nil {
 			fmt.Println("Save error:", err)
 			continue
 		}
+		fmt.Printf("M%.1f — %s\n", value.Properties.Mag, value.Properties.Place)
 	}
 }
