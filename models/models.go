@@ -1,5 +1,10 @@
 package models
 
+import (
+	"fmt"
+	"time"
+)
+
 type EarthquakeResponse struct {
 	Type     string    `json:"type"`
 	Metadata Metadata  `json:"metadata"`
@@ -20,6 +25,14 @@ type Feature struct {
 	Properties Properties `json:"properties"`
 	Geometry   Geometry   `json:"geometry"`
 	ID         string     `json:"id"`
+}
+
+func (f Feature) String() string {
+	return fmt.Sprintf("M%.1f (%s) — %s",
+		f.Properties.Mag,
+		time.Unix(f.Properties.Time/1000, 0).Format("2006-01-02 15:04"),
+		f.Properties.Place,
+	)
 }
 
 type Properties struct {

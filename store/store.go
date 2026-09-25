@@ -56,10 +56,23 @@ func (database *DB) Save(future models.Feature) error {
 	return err
 }
 
-func (database *DB) GetAll() ([]models.Feature, error) {
+func (database *DB) GetAll(sortBy, order string) ([]models.Feature, error) {
 	query := `
 		SELECT id, mag, place, time, tsunami, url, status, longitude, latitude, depth
 		FROM earthquakes`
+
+	validSort := map[string]bool{
+		"time": true,
+		"mag":  true,
+	}
+
+	if sortBy != "none" && validSort[sortBy] {
+		dir := "DESC"
+		if order == "asc" {
+			dir = "ASC"
+		}
+		query += fmt.Sprintf(" ORDER BY %s %s", sortBy, dir)
+	}
 
 	rows, err := database.db.Query(query)
 	if err != nil {

@@ -8,10 +8,8 @@ import (
 	"github.com/deathcore1998/earthquake-cli/models"
 )
 
-const baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson"
-
-func FetchEarthquakes() (models.EarthquakeResponse, error) {
-	resp, err := http.Get(baseURL)
+func FetchEarthquakes(url string) (models.EarthquakeResponse, error) {
+	resp, err := http.Get(url)
 	if err != nil {
 		return models.EarthquakeResponse{}, fmt.Errorf("HTTP request failed: %w", err)
 	}
