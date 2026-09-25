@@ -49,9 +49,9 @@ func (database *DB) Save(future models.Feature) error {
 		future.Properties.Tsunami,
 		future.Properties.URL,
 		future.Properties.Status,
-		future.Geometry.Coordinates[0],
-		future.Geometry.Coordinates[1],
-		future.Geometry.Coordinates[2])
+		future.Longitude(),
+		future.Latitude(),
+		future.Depth())
 
 	return err
 }

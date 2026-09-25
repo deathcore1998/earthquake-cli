@@ -35,6 +35,27 @@ func (f Feature) String() string {
 	)
 }
 
+func (f Feature) Longitude() float64 {
+	if len(f.Geometry.Coordinates) > 0 {
+		return f.Geometry.Coordinates[0]
+	}
+	return 0
+}
+
+func (f Feature) Latitude() float64 {
+	if len(f.Geometry.Coordinates) > 1 {
+		return f.Geometry.Coordinates[1]
+	}
+	return 0
+}
+
+func (f Feature) Depth() float64 {
+	if len(f.Geometry.Coordinates) > 2 {
+		return f.Geometry.Coordinates[2]
+	}
+	return 0
+}
+
 type Properties struct {
 	Mag     float64  `json:"mag"`
 	Place   string   `json:"place"`
