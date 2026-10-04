@@ -7,6 +7,7 @@ import (
 
 	"github.com/deathcore1998/earthquake-cli/client"
 	"github.com/deathcore1998/earthquake-cli/store"
+	"github.com/schollz/progressbar/v3"
 )
 
 func main() {
@@ -40,12 +41,15 @@ func main() {
 			os.Exit(1)
 		}
 
+		progressBar := progressbar.Default(int64(len(earthquakes.Features)))
 		for _, future := range earthquakes.Features {
 			err := database.Save(future)
 			if err != nil {
 				fmt.Println("Save error:", err)
 			}
+			progressBar.Add(1)
 		}
+		progressBar.Finish()
 	}
 
 	if *list {
