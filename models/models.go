@@ -27,9 +27,26 @@ type Feature struct {
 	ID         string     `json:"id"`
 }
 
+const (
+	reset  = "\033[0m"
+	red    = "\033[31m"
+	green  = "\033[32m"
+	yellow = "\033[33m"
+)
+
+func ColorMag(mag float64) string {
+	color := green
+	if mag >= 5.5 {
+		color = red
+	} else if mag >= 4.5 {
+		color = yellow
+	}
+	return fmt.Sprintf("%sM%.1f%s", color, mag, reset)
+}
+
 func (f Feature) String() string {
-	return fmt.Sprintf("M%.1f (%s) — %s",
-		f.Properties.Mag,
+	return fmt.Sprintf("%s (%s) — %s",
+		ColorMag(f.Properties.Mag),
 		time.Unix(f.Properties.Time/1000, 0).Format("2006-01-02 15:04"),
 		f.Properties.Place,
 	)
