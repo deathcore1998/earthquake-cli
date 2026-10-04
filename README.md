@@ -42,7 +42,7 @@ go build -o earthquake-cli
 | `--url`   | USGS feed URL     | USGS earthquake feed URL                              |
 ```
 ## Example output
-
+```
 go run main.go --list --limit=10 --sort=mag --order=desc
 
 M6.4 (2026-09-20 12:17) — 49 km NNE of Kainantu, Papua New Guinea
@@ -55,7 +55,7 @@ M5.5 (2026-10-04 14:12) — Volcano Islands, Japan region
 M5.4 (2026-09-20 15:45) — 68 km NNE of Kainantu, Papua New Guinea
 M5.3 (2026-09-25 14:12) — Vanuatu region
 M5.3 (2026-09-25 02:30) — 72 km NW of Finschhafen, Papua New Guinea
-
+```
 ## Project structure
 ```
 earthquake-cli/
